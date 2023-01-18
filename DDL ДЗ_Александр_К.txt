@@ -1,0 +1,49 @@
+                              --Задание 1
+CREATE TABLE student
+(
+	student_id serial, 
+	first_name varchar, 
+	last_name varchar, 
+	birthday date, 
+	phone varchar
+);
+--Создать таблицу student с полями student_id serial, first_name varchar, last_name varchar, birthday date, phone varchar
+
+ALTER TABLE student ADD COLUMN middle_name varchar;
+--Добавить в таблицу после создания колонку middle_name varchar
+ALTER TABLE student DROP COLUMN middle_name;
+--Удалить колонку middle_name
+ALTER TABLE student RENAME birthday TO birth_date;
+--Переименовать колонку birthday в birth_date
+ALTER TABLE student ALTER COLUMN phone SET DATA TYPE varchar(32)
+--Изменить тип данных колонки phone на varchar(32)
+
+ALTER TABLE student ADD PRIMARY KEY(student_id)
+INSERT INTO student(first_name, last_name, birth_date, phone) 
+VALUES ('Oleg', 'Maslov', '10.10.1991', 103),
+	   ('Aexander', 'Karnauhov', '09.09.1991', 102),
+	   ('Alina', 'Korolkova', '08.08.1995', 101)
+--Вставить три любых записи с автогенерацией идентификатора	 
+TRUNCATE TABLE student RESTART IDENTITY
+--Удалить все данные из таблицы со сбросом идентификатор в исходное состояние
+
+SELECT * FROM student
+
+                         --Задание 2
+ALTER TABLE products ADD CHECK (unit_price > 0)
+--добавить ограничение на поле unit_price таблицы products (цена должна быть больше 0)
+ALTER TABLE products ADD CHECK (discontinued In (0, 1))
+--добавить ограничение, что поле discontinued таблицы products может содержать только значения 0 или 1
+CREATE TABLE products_discontinued
+AS SELECT * FROM products 
+WHERE discontinued = 1;
+--Создать новую таблицу, содержащую все продукты, снятые с продажи (discontinued = 1)
+ ALTER TABLE products
+DROP CONSTRAINT fk_products_categories;
+ALTER TABLE order_details
+DROP CONSTRAINT fk_order_details_products;
+--Удалил ограничения связанные с Fk
+DELETE FROM products WHERE discontinued = 1
+--Удалить из products товары, снятые с продажи (discontinued = 1)
+ALTER TABLE products ADD CONSTRAINT FK_products FOREIGN KEY (product_id) 
+REFERENCES order_details (product_id);
